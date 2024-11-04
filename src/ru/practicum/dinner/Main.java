@@ -1,28 +1,25 @@
 package ru.practicum.dinner;
 
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Main {
 
-    static DinnerConstructor dc;
-    static Scanner scanner;
+    static final boolean TEST_MODE = true;    // It generates sample data to avoid extra manual work
+    static final DinnerConstructor dc = new DinnerConstructor(TEST_MODE);
+    static final InOutOps IOMachine = new InOutOps();
 
     public static void main(String[] args) {
-        dc = new DinnerConstructor();
-        scanner = new Scanner(System.in);
-
         while (true) {
             printMenu();
-            String command = scanner.nextLine();
-
+            int command = IOMachine.getInteger(1, 3);
             switch (command) {
-                case "1":
+                case 1:
                     addNewDish();
                     break;
-                case "2":
+                case 2:
                     generateDishCombo();
                     break;
-                case "3":
+                case 3:
                     return;
             }
         }
@@ -37,29 +34,48 @@ public class Main {
 
     private static void addNewDish() {
         System.out.println("Введите тип блюда:");
-        String dishType = scanner.nextLine();
+        String dishType = IOMachine.getNotEmptyString();
         System.out.println("Введите название блюда:");
-        String dishName = scanner.nextLine();
-
-        // добавьте новое блюдо
+        String dishName = IOMachine.getNotEmptyString();
+        dc.addDish(dishType, dishName);
     }
+
 
     private static void generateDishCombo() {
         System.out.println("Начинаем конструировать обед...");
-
         System.out.println("Введите количество наборов, которые нужно сгенерировать:");
-        int numberOfCombos = scanner.nextInt();
-        scanner.nextLine();
-
+        int numberOfCombos = IOMachine.getInteger(1);
         System.out.println("Вводите типы блюда, разделяя символом переноса строки (enter). Для завершения ввода введите пустую строку");
-        String nextItem = scanner.nextLine();
-
-        //реализуйте ввод типов блюд
+        ArrayList<String> typeItems = new ArrayList<>();
+        String nextItem = IOMachine.getString();
         while (!nextItem.isEmpty()) {
-
+            if (dc.checkType(nextItem)) {
+                typeItems.add(nextItem);
+            } else {
+                System.out.println("Тип обеда " + nextItem + " отсутствует в меню. Введите другой тип.");
+            }
+            nextItem = IOMachine.getString();
         }
-
-        // сгенерируйте комбинации блюд и выведите на экран
+        if (typeItems.isEmpty()) {
+            System.out.println("Вы ввели пустой список типов обеда. Получайте пустой список комбо!");
+            return;
+        }
+        ArrayList<ArrayList<String>> combos = dc.makeCombos(typeItems, numberOfCombos);
+        for (int i = 0; i < combos.size(); i++) {
+            System.out.println("Комбо " + (i + 1));
+            ArrayList<String> comboDish = combos.get(i);
+            boolean isFirstDish = true;
+            for (String dish : comboDish) {
+                if (isFirstDish) {
+                    System.out.print("[");
+                } else {
+                    System.out.print(", ");
+                }
+                System.out.print(dish);
+                isFirstDish = false;
+            }
+            System.out.println("]");
+        }
 
     }
 }
