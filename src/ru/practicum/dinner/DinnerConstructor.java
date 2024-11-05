@@ -47,7 +47,19 @@ public class DinnerConstructor {
     }
 
 
+    // It generates the list of random combos including duplicates
     ArrayList<ArrayList<String>> makeCombos(ArrayList<String> types, int number) {
+        if (types == null || types.isEmpty())  return null;
+        ArrayList<ArrayList<String>> combos = new ArrayList<>();
+        for (int i = 0; i < number; i++) {
+            ArrayList<String> randomCombo = getRandomCombo(types);
+            combos.add(randomCombo);
+        }
+        return combos;
+    }
+
+    // It generates the list of unique combos using HashSet to check duplicates
+    ArrayList<ArrayList<String>> makeUniqueCombos(ArrayList<String> types, int number) {
         if (types == null || types.isEmpty())  return null;
         ArrayList<ArrayList<String>> combos = new ArrayList<>();
         ArrayList<HashSet<String>> checkers = new ArrayList<>();

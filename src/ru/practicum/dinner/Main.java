@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-    static final boolean TEST_MODE = true;    // It generates sample data to avoid extra manual work
+    static final boolean TEST_MODE = false;    // It generates sample data to avoid extra manual work
     static final DinnerConstructor dc = new DinnerConstructor(TEST_MODE);
     static final InOutOps IOMachine = new InOutOps();
 
